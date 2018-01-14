@@ -2,6 +2,10 @@
 Projekt nr 16 czyli cykliczne odpytywanie serwerow o adresach URL dla poszczegolnych uzytkownikow.
 Podzial na dwa projekty: serwera i klienta
 
+Wykonali:
+Mikołaj Stankowiak, 127234
+Michał Wachowiak, 127300
+
 Serwer realizowany na Linux w C
 Klient realizowany na Windows w C#
 
