@@ -19,12 +19,6 @@ extern "C" {
 #endif
 
 #include "io.h"
-
-/*
-
-		operacje na tablicy wspoldzielonej pamieci przechowujaca dane uzytkownikow
-
-*/
   
     // idektyfikator tablicy pamieci wspoldzielonej
 #define shared_addr 12345

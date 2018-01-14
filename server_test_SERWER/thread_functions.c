@@ -65,6 +65,7 @@ void *ServiceClient(void* ServiceClientStructPointer) {
     // nalezy zmienic na funkcje odporna na maly rozmiar bufora
     //printf("before read\n");
     read(fdx, readBuffer, sizeof (readBuffer));
+    //CustomRead(fdx, readBuffer, sizeof(readBuffer));
     //printf("after read\n");
     // wypisanie i rozlozenie danych od klienta na skladowe
     DecompressData(readBuffer, &orderCode, userName, &serverIndex, serverDomain, &userPort, &userMaxPing);
@@ -187,6 +188,7 @@ void *ServiceClient(void* ServiceClientStructPointer) {
                                 if (serverInfo.structure.index != -1) {
                                     CompressData(writeBuffer, eServerData, 0, &serverInfo);
                                     write(fdx, writeBuffer, sizeof (writeBuffer));
+                                    //CustomWrite(fdx, writeBuffer, sizeof (writeBuffer));
                                 } else break;
                             } 
                             printf("   wszystkie: %d, dzialajace: %d\n", allServers, workingServers);
@@ -324,6 +326,7 @@ void *ServiceClient(void* ServiceClientStructPointer) {
             //DisconnectSharedTable(serverTable);
             // nalezy zmienic na funkcje odporna na maly rozmiar bufora
             write(fdx, writeBuffer, sizeof (writeBuffer));
+            //CustomWrite(fdx, writeBuffer, sizeof(writeBuffer));
             if (DEBUG) {
                 printf("Wyslano dane:\n");
                 PrintInOutBuffer(writeBuffer);

@@ -22,12 +22,7 @@ extern "C" {
 #include "io.h"
 #include "data_out.h"
 #include "server_table.h"
-
-/*
-
-		funkcje wspolbieznych watkow skladajacych sie na serwer
-
-*/
+#include "custom_read_write.h"
 
     // idektyfikator pamieci zmiennej wspoldzielonej quit
 #define quitMemoryId 99999 

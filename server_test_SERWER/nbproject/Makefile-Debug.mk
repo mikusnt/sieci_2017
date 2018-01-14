@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/custom_read_write.o \
 	${OBJECTDIR}/data_out.o \
 	${OBJECTDIR}/io.o \
 	${OBJECTDIR}/main.o \
@@ -66,6 +67,11 @@ LDLIBSOPTIONS=-lpthread
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/server_test_serwer: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/server_test_serwer ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/custom_read_write.o: custom_read_write.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/custom_read_write.o custom_read_write.c
 
 ${OBJECTDIR}/data_out.o: data_out.c
 	${MKDIR} -p ${OBJECTDIR}
