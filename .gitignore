@@ -58,5 +58,5 @@ bin/
 obj/
 #.*/
 #.*
-*.doc
-*.docx
+#*.doc
+#*.docx
