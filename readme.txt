@@ -10,7 +10,7 @@ Serwer realizowany na Linux w C
 Klient realizowany na Windows w C#
 
 kod wykonania: 0 - poprawność
-kod wykonania: -1 - błąd
+kod wykonania: 1 - błąd
 
 Komunikacja klient <--> serwer:
 
