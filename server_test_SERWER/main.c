@@ -45,7 +45,6 @@ int main(int argc, char** argv) {
 int MainServer() {
     signal(SIGCHLD, childEnd);
     changemode(1);
-
     // dane sieciowe
     int fd, fdx;
     int maxClients = 5;

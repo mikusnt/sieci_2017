@@ -124,6 +124,7 @@ int OpenUser(char *username, FILE **file_out) {
     char filename[usernamePathBufferSize];
     char buffer[lineFileBufferSize];
     int count = 0;
+    mkdir(userFolder, 0766);
     createFilename(username, filename, sizeof(filename));
     //printf("%s\n", filename);
     FILE *file;
