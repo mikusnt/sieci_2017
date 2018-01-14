@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectionToServer.cs" />
     <Compile Include="data.cs" />
     <Compile Include="Dodawanie.cs">
       <SubType>Form</SubType>

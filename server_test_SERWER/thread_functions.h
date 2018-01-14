@@ -23,6 +23,12 @@ extern "C" {
 #include "data_out.h"
 #include "server_table.h"
 
+/*
+
+		funkcje wspolbieznych watkow skladajacych sie na serwer
+
+*/
+
     // idektyfikator pamieci zmiennej wspoldzielonej quit
 #define quitMemoryId 99999 
     // ilosc sekond interwalu czasowego pomiedzy cyklicznym wysylanim danych

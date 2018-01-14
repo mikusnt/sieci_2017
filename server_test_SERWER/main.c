@@ -15,6 +15,12 @@
 #include "thread_functions.h"
 
 
+/*
+
+	Funkcja glowna zawierajaca poczatkowy kod serwera w tym oczekiwanie na nowe dane
+
+*/
+
 #define maxPing 2000
 
 // glowna funkcja serwera
