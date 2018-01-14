@@ -1,0 +1,5 @@
+ www.wp.pl;00080
+ www.interia.pl;00080
+ www.wp.plia.pl;00021
+ www.onet.pl;00080
+ www.cs.put.poznan.pl;00080

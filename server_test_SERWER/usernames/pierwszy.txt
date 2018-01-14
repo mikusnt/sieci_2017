@@ -1,0 +1,4 @@
+ www.wp.pl;00080
+ www.wp.pl;00443
+ www.wp.pl;00021
+ www.onet.pl;00443
