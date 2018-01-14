@@ -20,14 +20,27 @@ extern "C" {
     
 #include "all_includes.h"
    
-   
-
+/*
+ 
+ Obsluga reprezentacji danych klientow jako pliki tekstowe, odpytywanie serwerow
+ * sieciowych
+ 
+ */   
+    
+// tryb debugowania wypisujacy na konsole wiele danych
+#define DEBUG 0
+    // rozmair bufora nazwy serwera
 #define serverDomainBufferSize 64
+    // rozmiar bufora loginu
 #define userNameBufferSize 16
+    // rozmiar bufora sciezki do pliku uzytkownika
 #define usernamePathBufferSize 32
+    // rozmiar bufora jednej linii pliku
 #define lineFileBufferSize 75
     
+    // maksymalny nr pozycji serwera sieciowego w pliku
 #define maxServerDomainIndex 127
+    // rozmiar bufora IP jako string
 #define IPBufferSize 16
    
 /* struktura przechowujaca dane o stanie serwera */
@@ -47,6 +60,8 @@ typedef struct {
     short int ping;
 } ServerInfoStruct;
 
+// powyzsza struktura jako ciag bajtow
+// po char index; bajt przerwy
 typedef union {
     ServerInfoStruct structure;
     unsigned char bytes[sizeof(ServerInfoStruct)];
@@ -88,7 +103,7 @@ void InitServerInfo(ServerInfo *s);
 void PrintServerInfoHex(ServerInfo *s);
 /* wypisuje  do konsoli pola struktury ServerInfo linia po linii */
 void PrintServerInfo(ServerInfo *s);
-
+/* zamyka i ponownie otwiera wskazany plik z otwartym deskryptorem */
 int ReopenFile(FILE **file, char *userName);
 
 #ifdef __cplusplus

@@ -49,6 +49,7 @@ int DecompressData(unsigned char *inBuffer, OrderCode *inCode, char * userName, 
         memcpy(serverDomain, inBuffer + 1 + userNameBufferSize + sizeof(unsigned short), serverDomainBufferSize);
         return 1 + userNameBufferSize + sizeof(unsigned short) + serverDomainBufferSize;
     } else {
+        DateTime();
         printf("niepoprawna wartosc polecenia '0x%02X' podczas dekompresji\n", (unsigned char)*inCode);
         return -1;
     }     

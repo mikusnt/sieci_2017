@@ -32,9 +32,10 @@ int find_ip_address(char *hostname, char *ip_address)
       struct hostent *host_name;     
       struct in_addr **ipaddress;     
       int count;   
-      DateTime();
+      
       if((host_name = gethostbyname(hostname)) == NULL)     
       { 
+            DateTime();
             printf("Nie mozna ustalic adresu IP dla hosta '%s'\n", hostname);      
             return -1;
       }   
@@ -44,7 +45,10 @@ int find_ip_address(char *hostname, char *ip_address)
             for(count = 0; ipaddress[count] != NULL; count++)
             {   
                   strcpy(ip_address, inet_ntoa(*ipaddress[count]));
-                  printf("Znaleziono IP '%s' dla hosta '%s'\n", ip_address, hostname);
+                  if (DEBUG) {
+                    DateTime();
+                    printf("Znaleziono IP '%s' dla hosta '%s'\n", ip_address, hostname);
+                  }
                   return 0;
             }
       }
@@ -194,15 +198,17 @@ int AddServer(char *serverName, unsigned short int port, FILE **file, char *user
     char buffer[lineFileBufferSize];
     char addBuffer[lineFileBufferSize];
     char isInFile = 0;
-    DateTime();
+    
     if (*file == NULL) {
-        printf("Pusty deskryptor pliku, nie mozna dodac serwera '%s'\n", serverName);
+        DateTime();
+        printf("Pusty deskryptor pliku, nie mozna dodac serwera '%s' do uzytkownika '%s'\n", serverName, userName);
         return -1;
     }
-    int out = fseek(*file, 0, SEEK_SET);
+    int out = fseek(*file, 0, SEEK_SET); 
     int charCount;
     if (out != 0) {
-        printf("Blad podczas zmiany pozycji pliku na poczatkowa o kodzie %d podczas dodawania serwera '%s'\n", out, serverName);
+        DateTime();
+        printf("Blad podczas zmiany pozycji pliku na poczatkowa o kodzie %d podczas dodawania serwera '%s' do uzytkownika '%s'\n", out, serverName, userName);
         return -1;
     } else {
         snprintf(addBuffer, lineFileBufferSize, " %s;%05d\n", serverName, port);
@@ -214,11 +220,13 @@ int AddServer(char *serverName, unsigned short int port, FILE **file, char *user
             charCount = fprintf(*file, "%s", addBuffer);
             if (ReopenFile(file, userName) != 0) 
                 return -1;
-            printf("Dodano serwer o nazwie '%s' i porcie %hu\n", serverName, port);
+            DateTime();
+            printf("Dodano serwer o nazwie '%s' i porcie %hu do uzytkownika '%s'\n", serverName, port, userName);
             //printf("'%s'\n", addBuffer);
         } else {
             charCount = 0;
-            printf("Serwer o nazwie '%s' i porcie %hu jest juz w pliku\n", serverName, port);
+            DateTime();
+            printf("Serwer o nazwie '%s' i porcie %hu jest juz w pliku uzytkownika '%s'\n", serverName, port, userName);
         }
         
     }
@@ -243,15 +251,23 @@ ServerInfo TestServer(int *serverNr, FILE *file, unsigned short int timeMs) {
         info.structure.port = atoi(kodPortu);
         
         info.structure.ping = tryConnectToServer(info.structure.name, info.structure.port, timeMs);
-        DateTime();
+        //printf("%d\n", info.structure.ping);
         if (info.structure.ping >= 0) {
-            printf("Uzyskano polaczenie do serwera '%s' o porcie %hu i indeksie %d, ping %hi\n", info.structure.name, info.structure.port, *serverNr, info.structure.ping);
-        } else printf("Brak polaczenia do serwera '%s' o porcie %hu i indeksie %d\n", info.structure.name, info.structure.port, *serverNr);
+            if (DEBUG) {
+                DateTime();
+                printf("Uzyskano polaczenie do serwera '%s' o porcie %hu i indeksie %d, ping %hi\n", info.structure.name, info.structure.port, *serverNr, info.structure.ping);
+            }
+        } else {
+            DateTime();
+            printf("Brak polaczenia do serwera '%s' o porcie %hu i indeksie %d\n", info.structure.name, info.structure.port, *serverNr);
+        }
         (*serverNr)++;
     } else {
-        DateTime();
         info.structure.index = -1;
-        printf("Brak serwerow to sprawdzenia\n");
+        if (DEBUG) {
+            DateTime();
+            printf("Brak serwerow to sprawdzenia\n");
+        }
         //return NULL;
     }
     return info;
@@ -262,7 +278,7 @@ ServerInfo TestServer(int *serverNr, FILE *file, unsigned short int timeMs) {
 int RemoveServer(int serverIndex, FILE **file, char *userName) {
     DateTime();
     if (*file == NULL) {
-        printf("Pusty deskryptor pliku, nie mozna usunac serwera o indeksie %d\n", serverIndex);
+        printf("Pusty deskryptor pliku, nie mozna usunac serwera o indeksie %d uzytkownika '%s'\n", serverIndex, userName);
         return -1;
     }
     int count = 0;
@@ -273,7 +289,7 @@ int RemoveServer(int serverIndex, FILE **file, char *userName) {
     fseek(*file, 0, SEEK_SET); // seek back to beginning of file
     printf("\n\n%d\n\n", size);
     if (size == 0) {
-        printf("Nie mozna usunac gdyz plik pusty\n");
+        printf("Nie mozna usunac serwera gdyz plik uzytkownika '%s' pusty\n", userName);
         return -1;
     }
     while((count < serverIndex) && (fgets(buffer, sizeof(buffer), *file))) {
@@ -281,12 +297,13 @@ int RemoveServer(int serverIndex, FILE **file, char *userName) {
     }
     if (count == serverIndex) {
         fputs("*", *file);
-        if (ReopenFile(file, userName) != 0) 
+        if (ReopenFile(file, userName) != 0) {
             return -1;
-        printf("Usunieto serwer o indeksie %d\n", serverIndex);
+        }
+        printf("Usunieto serwer o indeksie %d uzytkownika '%s'\n", serverIndex, userName);
         return count;
     } else {
-        printf("Nie mozna usunac serwera o indeksie %d gdyz jest poza plikiem\n", serverIndex);
+        printf("Nie mozna usunac serwera o indeksie %d uzytkownika '%s' gdyz jest poza plikiem\n", serverIndex, userName);
         return -1;
     }
 }
@@ -297,8 +314,9 @@ int RemoveAllServers(FILE **file, char *userName) {
     DateTime();
     fpos_t rozmiar;
     fpos_t aktualny;
+    DateTime();
     if (*file == NULL) {
-        printf("Pusty deskryptor pliku, nie mozna usunac wszystkich serwerow\n");
+        printf("Pusty deskryptor pliku, nie mozna usunac wszystkich serwerow uzytkownika '%s'\n", userName);
         return -1;
     }
     int count = 0;
@@ -313,8 +331,11 @@ int RemoveAllServers(FILE **file, char *userName) {
             fputs("*", *file); 
         } else break;
     } while(fgets(buffer, sizeof(buffer), *file));
-    if (ReopenFile(file, userName) != 0) 
-        return -1;    
+    if (ReopenFile(file, userName) != 0) {
+        //printf("Nieokreslony blad ponownego otwarcia plikow uzytkownika '%s'\n", userName);
+        return -1;  
+    }
+    printf("Usunieto wszystkie serwery uzytkownika '%s'\n", userName);      
     return count;
 }
 
@@ -354,17 +375,24 @@ int RemoveUser(char *userName) {
    return 0 w przypadku powodzenia, inaczej -1, serverNr_out - polozenie kursora jako nr 
    linii od 0, ladowany w przypadku powodzenia */
 int ToZeroIndex(int *serverNr_out, FILE *file) {
-    DateTime();
+    
     if (file == NULL) {
+        DateTime();
         printf("Pusty deskryptor pliku, nie mozna przeskoczyc do poczatku pliku\n");
         return -1;
     }
     int out = fseek(file, 0, SEEK_SET);
     if (out == 0) {
-        printf("Zmieniono pozycje pliku na poczatkowa\n");
+        if (DEBUG) {
+            DateTime();
+            printf("Zmieniono pozycje pliku na poczatkowa\n");
+        }
         *serverNr_out = 0;
     }
-    else printf("Blad podczas zmiany pozycji pliku na poczatkowa o kodzie %d", out);
+    else {
+        DateTime();
+        printf("Blad podczas zmiany pozycji pliku na poczatkowa o kodzie %d", out); 
+    }
     return out;
 }
 
@@ -391,6 +419,7 @@ void PrintServerInfo(ServerInfo *s) {
     printf("Ping: %hd\n", s->structure.ping);
 }
 
+/* zamyka i ponownie otwiera wskazany plik z otwartym deskryptorem */
 int ReopenFile(FILE **file, char *userName) {
     int out = 0;
     if (CloseUser(file) == 0) {
@@ -398,6 +427,9 @@ int ReopenFile(FILE **file, char *userName) {
             out = -1;
     } else
         out = -1;
-    if (out != 0) printf("Blad ponownego otwarcia pliku %s\n", userName);
+    if (out != 0) {
+        DateTime();
+        printf("Blad ponownego otwarcia pliku uzytkownika '%s'\n", userName);
+    }
     return out;
 }

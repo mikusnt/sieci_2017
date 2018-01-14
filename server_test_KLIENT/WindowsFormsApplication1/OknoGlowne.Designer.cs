@@ -24,8 +24,8 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonLogout = new System.Windows.Forms.Button();
@@ -89,9 +89,9 @@
             this.dataRecords.AllowUserToDeleteRows = false;
             this.dataRecords.AllowUserToResizeColumns = false;
             this.dataRecords.AllowUserToResizeRows = false;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
-            this.dataRecords.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.Black;
+            this.dataRecords.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.dataRecords.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataRecords.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Count,
@@ -102,9 +102,9 @@
             this.dataRecords.Location = new System.Drawing.Point(12, 12);
             this.dataRecords.MultiSelect = false;
             this.dataRecords.Name = "dataRecords";
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
-            this.dataRecords.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Black;
+            this.dataRecords.RowsDefaultCellStyle = dataGridViewCellStyle6;
             this.dataRecords.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataRecords.Size = new System.Drawing.Size(564, 284);
             this.dataRecords.StandardTab = true;
@@ -167,11 +167,6 @@
             this.numericPing.Location = new System.Drawing.Point(6, 19);
             this.numericPing.Maximum = new decimal(new int[] {
             2000,
-            0,
-            0,
-            0});
-            this.numericPing.Minimum = new decimal(new int[] {
-            20,
             0,
             0,
             0});
@@ -256,6 +251,7 @@
             // 
             // timerColor
             // 
+            this.timerColor.Interval = 50;
             this.timerColor.Tick += new System.EventHandler(this.timer3_Tick);
             // 
             // labelTime
@@ -283,6 +279,7 @@
             this.Controls.Add(this.buttonDelete);
             this.Controls.Add(this.buttonAdd);
             this.Name = "OknoGlowne";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OknoGlowne_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.dataRecords)).EndInit();

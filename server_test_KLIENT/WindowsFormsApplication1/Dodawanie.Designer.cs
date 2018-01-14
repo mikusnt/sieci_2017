@@ -107,6 +107,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Name = "Dodawanie";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Dodawanie serwera";
             this.Load += new System.EventHandler(this.Dodawanie_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericPort)).EndInit();

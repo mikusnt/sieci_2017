@@ -24,6 +24,12 @@ extern "C" {
 #include "data_out.h"
 #include "server_table.h"
     
+    /*
+     
+     testy podstawowych struktur przeprowadzane w czasie braku klienta
+     
+     */
+    
 // prowizoryczny test io.h
 int Test_io();
 // prowizoryczny test data_out.h

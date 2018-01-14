@@ -98,6 +98,8 @@ namespace server_test_KLIENT {
                     stopWatch.Stop();
                     
                     byte[] bytes = state.m_MemoryStream.ToArray();
+                    if (DataConst.DEBUG)
+                        MessageBox.Show(Conversions.BytesToStringHex(bytes));
                     /* all the data has arrived */
                     // koniec transmisji danych odbiorczych
                     if (bytes.Length > 0) {

@@ -39,6 +39,12 @@ extern "C" {
 #include <termios.h>
 #include <pthread.h>
 
+    /*
+     
+     Zawiera biblioteki wykorzystywane w projekcie, kazdy inny plik naglowkowy 
+     * korzysta z tej biblioteki
+     
+     */
 
 #ifdef __cplusplus
 }

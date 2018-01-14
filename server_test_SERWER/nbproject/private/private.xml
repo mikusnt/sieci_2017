@@ -7,18 +7,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/io.h</file>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/tests.h</file>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/server_table.c</file>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/data_out.h</file>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/thread_functions.c</file>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/io.c</file>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/main.c</file>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/thread_functions.h</file>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/tests.c</file>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/server_table.h</file>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/data_out.c</file>
-            <file>file:/home/ms-lin/sieci_2017/server_test_SERWER/all_includes.h</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/thread_functions.c</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/server_table.h</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/all_includes.h</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/data_out.h</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/thread_functions.h</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/main.c</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/tests.h</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/data_out.c</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/io.h</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/io.c</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/tests.c</file>
+            <file>file:/home/ms-lin/Pulpit/sieci_2017/server_test_SERWER/server_table.c</file>
         </group>
     </open-files>
 </project-private>

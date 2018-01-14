@@ -19,14 +19,20 @@ extern "C" {
 #endif
 
 #include "io.h"
+    /*
+     
+            Operacje na danych przesylanych przez TCP jako jeden ciag bajtow
+ 
+     */
     
+// rozmiar bufora zapisu / odczytu danych TCP
 #define inOutBufferSize 90
 // przy zmianie ponizszych danych nalezy zmienic wartosc endInOutBuffer
 #define endInOutBufferByte 0xFF
 #define endInOutBufferSize 3
 
 // sekwencja bajtow oznaczajaca koniec bufora
-extern const unsigned int endInOutBuffer; //= (unsigned int)(0xFFFFFFFF);
+extern const unsigned int endInOutBuffer; //= (unsigned int)(0xFFFFFFF0);
 
 // kody liczbowe rozkazow przyjmowanych i wykonywanych przez serwer
 typedef enum {

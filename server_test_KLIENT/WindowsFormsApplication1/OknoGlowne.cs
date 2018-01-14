@@ -52,6 +52,7 @@ namespace server_test_KLIENT {
             toServerBuffer = new ToServerBuffer(OrderCode.eLogin, userName, 0, "", DataConst.defaultMaxPing, 80);
             toServerBufferREP = new ToServerBuffer(OrderCode.eServerData, userName, 0, "", DataConst.defaultMaxPing, 80);
             InitializeComponent();
+            this.Text = "Klient: " + userName;
             timerDelayInfo.Interval = DataConst.maxWaitingMSForFullAnswer;
             this.numericPing.Value = toServerBuffer.maxPing;
             //MessageBox.Show(odseparowaneIP.IPToString());
@@ -82,7 +83,9 @@ namespace server_test_KLIENT {
         void setThreadedColor() {
             if (this.pictureColor.InvokeRequired) {
                 setThreadedColorCallback colorCallback = new setThreadedColorCallback(setThreadedColor);
-                this.obj.Invoke(colorCallback);
+                try {
+                    this.obj.Invoke(colorCallback);
+                } catch { }
             } else {
                 pictureColor.BackColor = Color.LimeGreen;
                 timerColor.Start();
@@ -93,7 +96,9 @@ namespace server_test_KLIENT {
         void setThreadedInsertRow(ServerInfo info) {
             if (this.dataRecords.InvokeRequired) {
                 setThreadedInsertRowCallback InsertRowCallback = new setThreadedInsertRowCallback(setThreadedInsertRow);
-                this.obj.Invoke(InsertRowCallback, info);
+                try {
+                    this.obj.Invoke(InsertRowCallback, info);
+                } catch { }
             } else {
                 try {
                     if (dataRecords.Rows.Count == 0)
@@ -123,7 +128,7 @@ namespace server_test_KLIENT {
                     dataRecords.Update();
                     LoadSelectedRow();
                 } catch (Exception exc) {
-                    MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
+                    //MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
                 }
             }
         }
@@ -131,7 +136,9 @@ namespace server_test_KLIENT {
         void setThreadedClearDataRecords() {
             if (this.dataRecords.InvokeRequired) {
                 setThreadedClearDataRecordsCallback ClearDataRecordsCallback = new setThreadedClearDataRecordsCallback(setThreadedClearDataRecords);
-                this.obj.Invoke(ClearDataRecordsCallback);
+                try {
+                    this.obj.Invoke(ClearDataRecordsCallback);
+                } catch { }
             } else {
                 dataRecords.Rows.Clear();
                 LoadSelectedRow();
@@ -141,7 +148,9 @@ namespace server_test_KLIENT {
         void setThreadedStatusLabel(String info) {
             if (this.statusStripInfo.InvokeRequired) {
                 setThreadedStatusLabelCallback StatusLabel = new setThreadedStatusLabelCallback(setThreadedStatusLabel);
-                this.obj.Invoke(StatusLabel, info);
+                try {
+                    this.obj.Invoke(StatusLabel, info);
+                } catch { }
             } else {
                 statusGlowne.Text = info;
             }
@@ -150,12 +159,14 @@ namespace server_test_KLIENT {
         void setThreadedConnectionTime(int time) {
             if (this.labelConnection.InvokeRequired) {
                 setThreadedConnectionTimeCallback ConnectionTime = new setThreadedConnectionTimeCallback(setThreadedConnectionTime);
-                this.obj.Invoke(ConnectionTime, time);
+                try {
+                    this.obj.Invoke(ConnectionTime, time);
+                } catch { }
             } else {
                 if (time >= 0) {
                     labelConnection.Text = "Czas obsługi: " + time.ToString() + " ms";
                 } else {
-                    labelConnection.Text = "Czas obsługi: brak połączenia";
+                    labelConnection.Text = "Czas obsługi: ∞";
                 }
             }
         }
@@ -163,7 +174,9 @@ namespace server_test_KLIENT {
         void setThreadedTime() {
             if (this.labelTime.InvokeRequired) {
                 setThreadedTimeCallback Time = new setThreadedTimeCallback(setThreadedTime);
-                this.obj.Invoke(Time);
+                try {
+                    this.obj.Invoke(Time);
+                } catch { }
             } else {
                 labelTime.Text = "Dane z " + DateTime.Now.ToString("HH:mm:ss tt");
             }
@@ -179,22 +192,35 @@ namespace server_test_KLIENT {
                 /* retrieve the SocketStateObject */
                 SocketStateObject state = (SocketStateObject)ar.AsyncState;
 
+                /* read data */
                 
-                Socket socketFd = state.m_SocketFd;
+                int size = socketFd.EndReceive(ar);
 
                 // dla bufora jednobajtowego
                 bool end = false;
-                state.m_MemoryStream.Write(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE);
+
                 if (state.m_DataBuf[0] == DataConst.endInOutBufferByte) {
                     state.endCounter++;
                     if (state.endCounter == DataConst.endInOutBufferSize)
                         end = true;
                 } else state.endCounter = 0;
 
-
-
-                /* read data */
-                int size = socketFd.EndReceive(ar);
+                if (state.start) {
+                    if (state.m_DataBuf[0] != 0) {
+                        state.start = false;
+                        setThreadedColor();
+                        //MessageBox.Show(colorCount.ToString());
+                    }
+                }
+                if (!state.start) {
+                    setThreadedColor();
+                    state.m_MemoryStream.Write(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE);
+                    if (state.m_DataBuf[0] == DataConst.endInOutBufferByte) {
+                        state.endCounter++;
+                        if (state.endCounter == DataConst.endInOutBufferSize)
+                            end = true;
+                    } else state.endCounter = 0;
+                }
 
                 if (!end) {
                     
@@ -205,15 +231,15 @@ namespace server_test_KLIENT {
                     /* all the data has arrived */
                     // koniec transmisji danych odbiorczych
                     byte[] bytes = state.m_MemoryStream.ToArray();
+                    if (DataConst.DEBUG)
+                        MessageBox.Show(Conversions.BytesToStringHex(bytes));
                     if (bytes.Length > 0) {
-                        
                         setThreadedConnectionTime((int)stopWatch.ElapsedMilliseconds);
                         fromServerBuffer = new FromServerBuffer(bytes);
-                        MessageBox.Show(Conversions.BytesToStringHex(fromServerBuffer.bytes));
                         switch (fromServerBuffer.orderCode) {
                             case OrderCode.eMaxPing: {
                                 if (fromServerBuffer.orderResponse == 0) {
-                                    setThreadedStatusLabel("Aktualizowano maksymalny ping do " + toServerBuffer.maxPing);
+                                    setThreadedStatusLabel("Aktualizowano maksymalny ping do " + toServerBuffer.maxPing + " ms");
                                 } else {
                                     setThreadedStatusLabel("Błąd podczas ustawienia maksymalnego pingu " + toServerBuffer.maxPing);
                                 }
@@ -238,8 +264,7 @@ namespace server_test_KLIENT {
                                 if (fromServerBuffer.orderResponse == 0) {
                                     if (this.InvokeRequired) {
                                         this.Invoke((MethodInvoker)delegate {
-                                            //CloseREP();
-                                            // rozwiazanie awaryjne
+                                            CloseREP();
                                             this.Close();
                                         });
                                     }
@@ -281,18 +306,21 @@ namespace server_test_KLIENT {
 
 
                         /* shutdown and close socket */
-                        socketFd.Shutdown(SocketShutdown.Both);
-                        socketFd.Close();
+                        try {
+                            socketFd.Shutdown(SocketShutdown.Both);
+                            socketFd.Close();
+                        } catch { }
                     }
                 }
             } catch (Exception exc) {
-                MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
+                //MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
                 setThreadedStatusLabel("Błąd odczytu danych z serwera");
             }
         }
 
         private void SendCallback(IAsyncResult ar) {
             try {
+                setThreadedColor();
                 /* retrieve the socket from the ar object */
                 //Socket socketFd = (Socket)ar.AsyncState;
 
@@ -311,7 +339,7 @@ namespace server_test_KLIENT {
                 //socketFd.Shutdown(SocketShutdown.Both);
                 //socketFd.Close();
             } catch (Exception exc) {
-                Console.WriteLine(exc.Message.ToString());
+                //Console.WriteLine(exc.Message.ToString());
             }
 
         }
@@ -322,7 +350,7 @@ namespace server_test_KLIENT {
                 setThreadedConnectionTime(-1);
                 return;
             } else {
-
+                setThreadedColor();
                 // we set the flag to 1, indicating it was completed.
                 try {
                     setThreadedStatusLabel("Uzyskano połączenie do " + myIP.IPToString() + ", wymiana danych...");
@@ -348,13 +376,13 @@ namespace server_test_KLIENT {
                         /* begin sending the date */
                         socketFd.BeginSend(dataBuf, 0, dataBuf.Length, 0, new AsyncCallback(SendCallback), socketFd);
                     } catch (Exception exc) {
-                        Console.WriteLine(exc.Message.ToString());
+                       // Console.WriteLine(exc.Message.ToString());
                     }
 
                     /* begin receiving the data */
                     //socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(SendInfo), state);
                 } catch (Exception exc) {
-                    MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
+                   // MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
                     setThreadedStatusLabel("Brak poprawnej odpowiedzi od serwera");
                     //setThreadedConnectButton(false);
                 }
@@ -383,7 +411,7 @@ namespace server_test_KLIENT {
                 /* connect to the server */
                 socketFd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback), socketFd);
             } catch (Exception exc) {
-                MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
+                //MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
                 setThreadedStatusLabel("Brak połączenia do serwera");
                 //setThreadedConnectButton(false);
             }
@@ -419,7 +447,7 @@ namespace server_test_KLIENT {
                     MessageBox.Show("Niepoprawna długość IP: " + myIP.ToString(), "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             } catch (Exception exc) {
-                MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString() + ", IP: " + myIP.ToString(), "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString() + ", IP: " + myIP.ToString(), "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 setThreadedStatusLabel("Brak połączenia do serwera");
                 //setThreadedConnectButton(false);
             }
@@ -460,7 +488,7 @@ namespace server_test_KLIENT {
                     }
                 }
                 if (!state.start) {
-                    
+                    setThreadedColor();
                     state.m_MemoryStream.Write(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE);
                     if (state.m_DataBuf[0] == DataConst.endInOutBufferByte) {
                         state.endCounter++;
@@ -475,6 +503,8 @@ namespace server_test_KLIENT {
                 } else {
                     stopWatchREP.Stop();
                     byte[] bytes = state.m_MemoryStream.ToArray();
+                    if (DataConst.DEBUG) { }
+                       // MessageBox.Show(Conversions.BytesToStringHex(bytes));
                     /* all the data has arrived */
                     // koniec transmisji danych odbiorczych
                     if (bytes.Length > 0) {
@@ -501,7 +531,7 @@ namespace server_test_KLIENT {
                     }
                 }
             } catch (Exception exc) {
-                MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
+                //MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
                 setThreadedStatusLabel("Błąd odczytu danych połaczeń z serwera");
             }
         }
@@ -511,7 +541,7 @@ namespace server_test_KLIENT {
             try {
                 /* retrieve the socket from the ar object */
                 //Socket socketFd = (Socket)ar.AsyncState;
-
+                setThreadedColor();
                 /* end pending asynchronous send */
                 int bytesSent = socketFdREP.EndSend(ar);
                 //MessageBox.Show("Wysłano " + bytesSent.ToString() + " bajtów");
@@ -526,7 +556,7 @@ namespace server_test_KLIENT {
                 //socketFd.Shutdown(SocketShutdown.Both);
                 //socketFd.Close();
             } catch (Exception exc) {
-                Console.WriteLine(exc.Message.ToString());
+                //Console.WriteLine(exc.Message.ToString());
             }
 
         }
@@ -536,7 +566,7 @@ namespace server_test_KLIENT {
                 setThreadedStatusLabel("Brak połączenia do serwera");
                 return;
             } else {
-
+                setThreadedColor();
                 // we set the flag to 1, indicating it was completed.
                 try {
                     //setThreadedStatusLabel("Uzyskano połączenie do " + myIP.IPToString() + ", wymiana danych...");
@@ -568,7 +598,7 @@ namespace server_test_KLIENT {
                     /* begin receiving the data */
                     //socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(SendInfo), state);
                 } catch (Exception exc) {
-                    MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
+                    //MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
                     setThreadedStatusLabel("Brak poprawnej odpowiedzi od serwera");
                     //setThreadedConnectButton(false);
                 }
@@ -594,7 +624,7 @@ namespace server_test_KLIENT {
                 /* connect to the server */
                 socketFdREP.BeginConnect(endPoint, new AsyncCallback(ConnectCallbackREP), socketFdREP);
             } catch (Exception exc) {
-                MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
+                //MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
                 setThreadedStatusLabel("Brak połączenia do serwera");
                 //setThreadedConnectButton(false);
             }
@@ -629,7 +659,7 @@ namespace server_test_KLIENT {
                     MessageBox.Show("Niepoprawna długość IP: " + myIP.ToString(), "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             } catch (Exception exc) {
-                MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString() + ", IP: " + myIP.ToString(), "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString() + ", IP: " + myIP.ToString(), "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 setThreadedStatusLabel("Brak połączenia do serwera");
                 //setThreadedConnectButton(false);
             }
@@ -667,8 +697,8 @@ namespace server_test_KLIENT {
         private void CloseREP() {
             //timerThreadREP.Dispose();
             /* shutdown and close socket */
-            //socketFdREP.Shutdown(SocketShutdown.Both);
-            //socketFdREP.Close();
+            socketFdREP.Shutdown(SocketShutdown.Both);
+            socketFdREP.Close();
             //socketFdREP = null;
         }
 
@@ -706,7 +736,7 @@ namespace server_test_KLIENT {
                 if (dodawanie.result == DialogResult.OK) {
                     toServerBuffer.orderCode = OrderCode.eAddServer;
 
-                    MessageBox.Show(dodawanie.text);
+                    //MessageBox.Show(dodawanie.text);
                     toServerBuffer.serverDomain = dodawanie.text;
                     oPDomain = dodawanie.text;
                     toServerBuffer.port = dodawanie.port;
@@ -721,7 +751,7 @@ namespace server_test_KLIENT {
             toServerBuffer.orderCode = OrderCode.eDeleteServer;
             oPDomain = dataRecords.SelectedRows[0].Cells[1].Value.ToString();
             oPPort = (ushort)dataRecords.SelectedRows[0].Cells[2].Value;
-            MessageBox.Show(toServerBuffer.ToString());
+            //MessageBox.Show(toServerBuffer.ToString());
             // nr usuwanego indeksu i nazwa domeny zaladowane wczesniej przez akcje klikniecia
             //dataRecords.Rows.Clear();
             StartNormalConnection();

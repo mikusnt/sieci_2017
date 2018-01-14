@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace server_test_KLIENT {
     public static class DataConst {
+        public const bool DEBUG = false;
         public const byte serverDomainBufferSize = 64;
         public const byte userNameBufferSize = 16;
         public const byte usernamePathBufferSize = 32;

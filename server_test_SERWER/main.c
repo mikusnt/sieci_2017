@@ -48,7 +48,7 @@ int MainServer() {
 
     // dane sieciowe
     int fd, fdx;
-    int maxClients = 3;
+    int maxClients = 5;
     struct sockaddr_in serverAddr;
     struct sockaddr_in serverStorage;
     ServiceClientStruct serverClientStruct;
@@ -85,6 +85,8 @@ int MainServer() {
     while (1) {
         // obsluga zamkniecia serwera
         while (*quit == 1) { usleep(delayMsQuit * 1000); }
+        // ustawiane przez watek ServerClient gdy wcisnieto klawisz i ServerClient
+        // zakonczone
         if (*quit == 255) break;
 
         int size = sizeof (serverStorage);

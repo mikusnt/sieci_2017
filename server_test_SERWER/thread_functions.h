@@ -23,16 +23,24 @@ extern "C" {
 #include "data_out.h"
 #include "server_table.h"
 
+    // idektyfikator pamieci zmiennej wspoldzielonej quit
 #define quitMemoryId 99999 
+    // ilosc sekond interwalu czasowego pomiedzy cyklicznym wysylanim danych
+    // odpytywanych serwerow do klienta
 #define secondsToNewInfo 10
+    // sztuczna przerwa dzialania watku ServiceClient w kodzie ServerData
 #define delayMSSendingInfo 10
+    // sztuczna przerwa podczas oczekiwania na zamkniecie
 #define delayMsQuit 10
+    // port komunikacji miedzy klientem a serwerem
 #define networkPort 1234
     
+    // wskaznik pamieci wspoldzielonej
 ServerTable *serverTable;
-// 0 - dzialanie serwera, 1 - zadanie zamkniecia 255 - zezwolenie na zamkniecie przez watek potomny
+// 0 - dzialanie serwera, 1 - zadanie zamkniecia, 255 - zezwolenie na zamkniecie przez watek potomny
 unsigned char *quit;
 
+// skruktura przechowujaca argumenty wywolania ServiceClient
 typedef struct {
     int fdx;
     struct sockaddr_in serverStorage;
@@ -43,15 +51,17 @@ typedef struct {
 void changemode(int dir);
 /*  return !=0 gdy wcisniety jakis klawisz, 0 w przeciwnym wypadku*/
 int kbhit(void);
-/*  obsluga watka realizacji polecen od klienta, konczy sie po obsluzeniu */ 
+/*  obsluga watka realizacji polecen od klienta, konczy sie po obsluzeniu, wyjatkiem 
+ * eServerData ktory wykonuje sie  dopoki zalogowany klient*/ 
 void *ServiceClient(void* ServiceClientStructPointer);
 /*  obsluga wysylania cyklicznych danych do klienta, konczy sie gdy childProcess w userTable ustawiony na 0 */
-void *SendingToClient(void* userIndexPointer);
 /*  ustawia 1 dla zmiennej wspoldzielonej quit gdy chociaz raz przycisniety klawisz zamkniecia serwera*/
 void *Quit();
-/*  ustawia flage uzytkownikow w serverTable zezwalajac na ponowne wyslanie danych do klienta*/
+/*  jednorazowo ustawia flage uzytkownikow w serverTable zezwalajac na ponowne wyslanie danych do klienta,
+ zaklada blokade dostepu do ServerTable*/
 void EnableClientInfo(ServerTable *sT);
-/*  ustawia flage uzytkownikow w serverTable zezwalajac na ponowne wyslanie danych do klienta co interwal czasowy*/
+/*  cyklicznie ustawia flage uzytkownikow w serverTable zezwalajac na ponowne wyslanie danych do klienta 
+ * co interwal czasowy, zaklada blokade dostepu do ServerTable*/
 void *EnableClientInfoRepeated();
     
 #ifdef __cplusplus

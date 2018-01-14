@@ -282,6 +282,7 @@
             this.Controls.Add(this.buttonExit);
             this.Controls.Add(this.buttonLogin);
             this.Name = "Logowanie";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Logowanie";
             this.Load += new System.EventHandler(this.Logowanie_Load);
             this.statusStripLogin.ResumeLayout(false);
