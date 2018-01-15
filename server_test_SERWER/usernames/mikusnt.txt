@@ -6,3 +6,6 @@
  www.chrost.pl;00021
  www.chrost.pl;00080
  www.chrost.pl;00443
+ www.onet.pl;00083
+ www.cosdziwnego.pl;00080
+ www.ks.pl;00080

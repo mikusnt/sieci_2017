@@ -13,7 +13,7 @@ int CustomRead(int fd, unsigned char *buffer, int bufferSize) {
     while(1) {
         delta = read(fd, buffer + byteCount, bufferSize - byteCount);
         if (delta == -1) return -1;
-        for (int i = bufferSize + byteCount; i < bufferSize + byteCount + delta; i++) {
+        for (int i = byteCount; i < byteCount + delta; i++) {
             if (buffer[i] == endInOutBufferByte) 
                 endCounter++;
             else 
@@ -34,7 +34,7 @@ int CustomWrite(int fd, unsigned char *buffer, int bufferSize){
     while(1) {
         delta = write(fd, buffer + byteCount, bufferSize - byteCount);
         if (delta == -1) return -1;
-        for (int i = bufferSize + byteCount; i < bufferSize + byteCount + delta; i++) {
+        for (int i = byteCount; i < byteCount + delta; i++) {
             if (buffer[i] == endInOutBufferByte) 
                 endCounter++;
             else

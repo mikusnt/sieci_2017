@@ -120,7 +120,8 @@ namespace server_test_KLIENT {
                     }
                 }
             } catch (Exception exc) {
-                MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
+                if (DataConst.DEBUG)
+                    MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
                 setThreadedStatusLabel("Błąd odczytu danych z serwera");
                 setThreadedConnectButton(false);
             }
@@ -146,7 +147,7 @@ namespace server_test_KLIENT {
                 //socketFd.Shutdown(SocketShutdown.Both);
                 //socketFd.Close();
             } catch (Exception exc) {
-                Console.WriteLine(exc.Message.ToString());
+                //Console.WriteLine(exc.Message.ToString());
             }
 
         }
@@ -182,13 +183,14 @@ namespace server_test_KLIENT {
                         /* begin sending the date */
                         socketFd.BeginSend(dataBuf, 0, dataBuf.Length, 0, new AsyncCallback(SendCallback), socketFd);
                     } catch (Exception exc) {
-                        Console.WriteLine(exc.Message.ToString());
+                        //Console.WriteLine(exc.Message.ToString());
                     }
 
                     /* begin receiving the data */
                     //socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(SendInfo), state);
                 } catch (Exception exc) {
-                    MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
+                    if (DataConst.DEBUG)
+                        MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
                     setThreadedStatusLabel("Brak poprawnej odpowiedzi od serwera");
                     setThreadedConnectButton(false);
                 }
@@ -217,7 +219,8 @@ namespace server_test_KLIENT {
                 /* connect to the server */
                 socketFd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback), socketFd);
             } catch (Exception exc) {
-                MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
+                if (DataConst.DEBUG)
+                    MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString());
                 setThreadedStatusLabel("Brak połączenia do serwera");
                 setThreadedConnectButton(false);
             }
@@ -254,7 +257,8 @@ namespace server_test_KLIENT {
                 }
             } catch (Exception exc)
             {
-                MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString() + ", IP: " + myIP.ToString(), "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (DataConst.DEBUG)
+                    MessageBox.Show("Wyjątek:\t\n" + exc.Message.ToString() + ", IP: " + myIP.ToString(), "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 setThreadedStatusLabel("Brak połączenia do serwera");
                 setThreadedConnectButton(false);
             }

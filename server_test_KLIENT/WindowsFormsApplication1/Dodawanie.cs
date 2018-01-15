@@ -30,6 +30,7 @@ namespace server_test_KLIENT {
         private void buttonOK_Click(object sender, EventArgs e) {
             result = DialogResult.OK;
             text = textName.Text;
+            //MessageBox.Show(text);
             port = (ushort)numericPort.Value;
             this.Close();
         }

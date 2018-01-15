@@ -128,14 +128,22 @@ namespace server_test_KLIENT {
         private String _userName;
         public String userName {
             get { return _userName; }
-            set { _userName = value; Array.Copy(userName.ToArray(), this.userNameTable, userName.Length); }             
+            set {
+                _userName = value;
+                this.userNameTable = new char[DataConst.userNameBufferSize];
+                Array.Copy(userName.ToArray(), this.userNameTable, userName.Length);
+            }             
         }
         public sbyte serverIndex;
         private char[] serverDomainTable;
         private String _serverDomain;
         public String serverDomain {
             get { return _serverDomain; }
-            set { _serverDomain = value; Array.Copy(serverDomain.ToArray(), this.serverDomainTable, serverDomain.Length); }
+            set {
+                _serverDomain = value;
+                this.serverDomainTable = new char[DataConst.serverDomainBufferSize];
+                Array.Copy(serverDomain.ToArray(), this.serverDomainTable, serverDomain.Length);
+            }
         }
         public short maxPing;
         public ushort port;
